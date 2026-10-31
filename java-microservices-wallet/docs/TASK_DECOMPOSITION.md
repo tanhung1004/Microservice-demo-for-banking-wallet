@@ -47,12 +47,12 @@ Mục đích:
 Tạo các ứng dụng rỗng để có nền tảng viết code.
 
 Công việc:
-- [ ] Kiểm tra Java, Node.js, npm, Docker và Git.
-- [ ] Tạo Spring Boot project trong services/login-service.
-- [ ] Tạo Spring Boot project trong services/wallet-service.
-- [ ] Tạo Spring Boot project trong services/wallet-subscriber.
-- [ ] Tạo React + Vite project trong frontend.
-- [ ] Ghi phiên bản sử dụng và commit Maven Wrapper/lockfile.
+- [x] Kiểm tra Java, Node.js, npm, Docker và Git.
+- [x] Tạo Spring Boot project trong services/login-service.
+- [x] Tạo Spring Boot project trong services/wallet-service.
+- [x] Tạo Spring Boot project trong services/wallet-subscriber.
+- [] Tạo React + Vite project trong frontend.
+- [] Ghi phiên bản sử dụng và commit Maven Wrapper/lockfile.
 
 Kiểm tra:
 - Các project Java build/test được theo cấu hình khởi tạo.
@@ -73,8 +73,8 @@ Vị trí:
 compose.yaml, .env.example, infra/.
 
 Công việc:
-- [ ] Khai báo PostgreSQL và Kafka trong Compose.
-- [ ] Tạo login_db và wallet_db với quyền truy cập riêng.
+- [] Khai báo PostgreSQL và Kafka trong Compose.
+- [] Tạo login_db và wallet_db với quyền truy cập riêng.
 - [ ] Cấu hình volume để giữ dữ liệu.
 - [ ] Cấu hình Kafka cho kết nối từ máy host và container.
 - [ ] Tạo topic wallet-deposited.
