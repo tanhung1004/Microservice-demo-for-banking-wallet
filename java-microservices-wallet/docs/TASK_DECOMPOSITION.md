@@ -99,6 +99,7 @@ Vị trí:
 services/login-service/.
 
 Công việc:
+- [x] Kết nối PostgreSQL và tạo bảng users bằng Flyway.
 - [ ] Tạo User entity, repository và tài khoản demo.
 - [ ] Lưu mật khẩu dưới dạng hash.
 - [ ] Tạo API POST /api/auth/login.
