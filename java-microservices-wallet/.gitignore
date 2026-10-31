@@ -11,3 +11,5 @@ secrets/
 *.pem
 *.key
 .DS_Store
+# Local JWT keys
+/secrets/

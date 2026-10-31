@@ -51,3 +51,57 @@ Mật khẩu được băm bằng BCrypt; tài khoản đã tồn tại không b
 
 Đã kiểm tra restart: vẫn hai tài khoản, UUID và fingerprint của
 password_hash giữ nguyên.
+
+## API đăng nhập
+
+POST /api/auth/login
+
+Request mẫu:
+```json
+{
+  "username": "demo1",
+  "password": "Demo123!"
+}
+```
+
+Đăng nhập thành công trả HTTP 200 với:
+- accessToken: JWT ký bằng RSA RS256.
+- tokenType: Bearer.
+- expiresIn: 900 giây.
+- user: id và username; không chứa passwordHash.
+
+JWT claims:
+- sub: UUID của tài khoản.
+- iss: wallet-login.
+- aud: wallet-api.
+- iat: thời điểm cấp.
+- exp: hết hạn sau 15 phút.
+
+Sai thông tin đăng nhập trả HTTP 401.
+Thiếu thông tin trả HTTP 400 với code VALIDATION_ERROR.
+
+## Khóa JWT local
+
+Chạy từ thư mục gốc dự án:
+```powershell
+java .\scripts\GenerateJwtKeys.java
+```
+
+Script tạo cặp khóa trong secrets/ và không ghi đè khóa đã tồn tại.
+Thư mục secrets/ được bỏ qua bởi Git.
+
+Login đọc khóa qua app.jwt.private-key và app.jwt.public-key.
+Có thể cấu hình đường dẫn bằng JWT_PRIVATE_KEY_PATH và JWT_PUBLIC_KEY_PATH.
+
+## Kiểm tra JWT
+
+Chạy tại services/login-service:
+```powershell
+.\mvnw.cmd "-Dtest=JwtServiceTest" clean test
+```
+
+Đã chạy thành công 2 test:
+- Xác minh chữ ký, user, issuer, audience và thời hạn 900 giây.
+- Từ chối token khi xác minh bằng public key khác.
+
+Test sử dụng khóa tạm trong bộ nhớ, không cần database.

@@ -102,10 +102,15 @@ Công việc:
 - [x] Kết nối PostgreSQL và tạo bảng users bằng Flyway.
 - [x] Tạo User entity, repository và tài khoản demo.
 - [x] Lưu mật khẩu dưới dạng hash.
-- [ ] Tạo API POST /api/auth/login.
-- [ ] Kiểm tra dữ liệu và thông tin đăng nhập.
+- [x] Tạo API POST /api/auth/login.
+- [x] Kiểm tra dữ liệu và thông tin đăng nhập.
 - [ ] Cấp token có thời hạn khi đăng nhập đúng.
 - [x] Không reset tài khoản có sẵn khi khởi động lại.
+- [x] Kiểm tra username/password bằng BCrypt.
+- [x] Trả JWT ký bằng RSA RS256 khi đăng nhập thành công.
+- [x] JWT chứa sub, iss, aud, iat, exp; thời hạn 900 giây.
+- [x] Kiểm tra đăng nhập thành công, sai mật khẩu và thiếu dữ liệu.
+- [x] Unit test JWT: chữ ký và claims hợp lệ; từ chối public key sai.
 
 Kiểm tra:
 - Đúng tài khoản: 200 và token.
