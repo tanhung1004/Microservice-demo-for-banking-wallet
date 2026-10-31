@@ -30,3 +30,24 @@ V1__create_users.sql tạo bảng users.
 Đã kiểm tra migration V1 có success = true trong flyway_schema_history.
 Không sửa migration đã chạy thành công.
 Thay đổi cấu trúc tiếp theo cần tạo migration V2.
+
+## Tài khoản demo local
+
+| Username | Password | UUID |
+|---|---|---|
+| demo1 | Demo123! | 11111111-1111-4111-8111-111111111111 |
+| demo2 | Demo456! | 22222222-2222-4222-8222-222222222222 |
+
+Đây là tài khoản mẫu dùng cho local.
+
+Chạy tại thư mục services/login-service:
+```powershell
+$env:JAVA_TOOL_OPTIONS = "$env:JAVA_TOOL_OPTIONS -Duser.timezone=UTC"
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+
+Seeder chỉ hoạt động với profile local.
+Mật khẩu được băm bằng BCrypt; tài khoản đã tồn tại không bị ghi đè.
+
+Đã kiểm tra restart: vẫn hai tài khoản, UUID và fingerprint của
+password_hash giữ nguyên.

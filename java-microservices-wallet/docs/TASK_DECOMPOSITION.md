@@ -100,12 +100,12 @@ services/login-service/.
 
 Công việc:
 - [x] Kết nối PostgreSQL và tạo bảng users bằng Flyway.
-- [ ] Tạo User entity, repository và tài khoản demo.
-- [ ] Lưu mật khẩu dưới dạng hash.
+- [x] Tạo User entity, repository và tài khoản demo.
+- [x] Lưu mật khẩu dưới dạng hash.
 - [ ] Tạo API POST /api/auth/login.
 - [ ] Kiểm tra dữ liệu và thông tin đăng nhập.
 - [ ] Cấp token có thời hạn khi đăng nhập đúng.
-- [ ] Không reset tài khoản có sẵn khi khởi động lại.
+- [x] Không reset tài khoản có sẵn khi khởi động lại.
 
 Kiểm tra:
 - Đúng tài khoản: 200 và token.
