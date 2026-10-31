@@ -52,7 +52,7 @@ Công việc:
 - [x] Tạo Spring Boot project trong services/wallet-service.
 - [x] Tạo Spring Boot project trong services/wallet-subscriber.
 - [x] Tạo React + Vite project trong frontend.
-- [] Ghi phiên bản sử dụng và commit Maven Wrapper/lockfile.
+- [x] Ghi phiên bản sử dụng và commit Maven Wrapper/lockfile.
 
 Kiểm tra:
 - Các project Java build/test được theo cấu hình khởi tạo.
@@ -73,12 +73,12 @@ Vị trí:
 compose.yaml, .env.example, infra/.
 
 Công việc:
-- [] Khai báo PostgreSQL và Kafka trong Compose.
-- [] Tạo login_db và wallet_db với quyền truy cập riêng.
-- [ ] Cấu hình volume để giữ dữ liệu.
-- [ ] Cấu hình Kafka cho kết nối từ máy host và container.
-- [ ] Tạo topic wallet-deposited.
-- [ ] Ghi lệnh khởi chạy và kiểm tra vào tài liệu.
+- [x] Khai báo PostgreSQL và Kafka trong Compose.
+- [x] Tạo login_db và wallet_db với quyền truy cập riêng.
+- [x] Cấu hình volume để giữ dữ liệu.
+- [x] Cấu hình Kafka cho kết nối từ máy host và container.
+- [x] Tạo topic wallet-deposited.
+- [x] Ghi lệnh khởi chạy và kiểm tra vào tài liệu.
 
 Kiểm tra:
 - PostgreSQL và Kafka chạy thành công.
