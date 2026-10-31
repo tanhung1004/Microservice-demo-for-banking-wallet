@@ -104,7 +104,7 @@ Công việc:
 - [x] Lưu mật khẩu dưới dạng hash.
 - [x] Tạo API POST /api/auth/login.
 - [x] Kiểm tra dữ liệu và thông tin đăng nhập.
-- [ ] Cấp token có thời hạn khi đăng nhập đúng.
+- [x] Cấp token có thời hạn khi đăng nhập đúng.
 - [x] Không reset tài khoản có sẵn khi khởi động lại.
 - [x] Kiểm tra username/password bằng BCrypt.
 - [x] Trả JWT ký bằng RSA RS256 khi đăng nhập thành công.
