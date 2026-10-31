@@ -51,7 +51,7 @@ Công việc:
 - [x] Tạo Spring Boot project trong services/login-service.
 - [x] Tạo Spring Boot project trong services/wallet-service.
 - [x] Tạo Spring Boot project trong services/wallet-subscriber.
-- [] Tạo React + Vite project trong frontend.
+- [x] Tạo React + Vite project trong frontend.
 - [] Ghi phiên bản sử dụng và commit Maven Wrapper/lockfile.
 
 Kiểm tra:
