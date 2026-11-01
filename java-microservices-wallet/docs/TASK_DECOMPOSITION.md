@@ -139,12 +139,14 @@ services/wallet-service/.
 
 Công việc:
 
-- [ ] Tạo Wallet entity, repository và ví demo.
+- [x] Tạo Wallet entity, repository và ví demo.
 - [x] Cấu hình xác thực token.
 - [x] Lấy userId từ token đã xác thực.
-- [ ] Tạo GET /api/wallet/balance.
-- [ ] Không reset số dư khi khởi động lại.
-
+- [x] Tạo GET /api/wallet/balance.
+- [x] Không reset số dư khi khởi động lại.
+- [x] Token thiếu, sai hoặc hết hạn: 401.
+- [x] Người dùng không xem được ví của người khác.
+- [x] Ví không tồn tại: 404 WALLET_NOT_FOUND
 Kiểm tra:
 
 - Token hợp lệ: trả số dư đúng người dùng.
