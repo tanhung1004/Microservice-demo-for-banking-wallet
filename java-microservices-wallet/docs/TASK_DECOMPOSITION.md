@@ -254,17 +254,24 @@ services/wallet-subscriber/.
 
 Công việc:
 
-- [ ] Cấu hình Kafka consumer và consumer group.
-- [ ] Lắng nghe topic wallet-deposited.
-- [ ] Đọc event và ghi log thông tin giao dịch.
-- [ ] Có xử lý lỗi cho message không hợp lệ.
-- [ ] Subscriber không cập nhật số dư.
+- [x] Cấu hình Kafka consumer và consumer group.
+- [x] Lắng nghe topic wallet-deposited.
+- [x] Đọc event và ghi log thông tin giao dịch.
+- [x] Có xử lý lỗi cho message không hợp lệ.
+- [x] Subscriber không cập nhật số dư.
 
 Kiểm tra:
 
 - Cộng tiền ở Wallet: subscriber có log tương ứng.
 - Tạm dừng subscriber rồi chạy lại: nhận phần chưa xử lý.
 - Message lỗi không làm chương trình retry vô hạn.
+
+Kết quả thực tế:
+- Deposit thành công: Subscriber ghi log đúng transactionId, amount và balanceAfter.
+- Dừng Subscriber rồi bật lại: nhận event đang chờ; số dư không bị cộng thêm.
+- Message sai JSON tại offset 4 được ghi log INVALID_JSON và bỏ qua.
+- Event hợp lệ tiếp theo tại offset 5 vẫn được xử lý thành công.
+- Chính sách message không hợp lệ: ghi log và bỏ qua, không retry vô hạn.
 
 Commit:
 feat(subscriber): consume and log deposit events
