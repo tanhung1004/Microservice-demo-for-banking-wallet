@@ -44,4 +44,17 @@ public class WalletController {
                 .header("Cache-Control", "no-store")
                 .body(walletService.deposit(userId, amount));
     }
+
+        @PostMapping("/withdraw")
+    public ResponseEntity<MoneyResponse> withdraw(
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestBody MoneyRequest request
+    ) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        long amount = request.validatedAmount();
+
+        return ResponseEntity.ok()
+                .header("Cache-Control", "no-store")
+                .body(walletService.withdraw(userId, amount));
+    }
 }

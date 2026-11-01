@@ -24,18 +24,11 @@ public class WalletService {
 
     @Transactional
     public MoneyResponse deposit(UUID userId, long amount) {
-        // Bảo vệ quy tắc nghiệp vụ cả khi gọi service ngoài controller.
-        if (amount < 1 || amount > MAX_AMOUNT) {
-            throw new WalletOperationException(
-                    "VALIDATION_ERROR",
-                    "Amount phải là số nguyên từ 1 đến 1.000.000.000 VND."
-            );
-        }
+        validateAmount(amount);
 
         Wallet wallet = walletRepository.findByUserIdForUpdate(userId)
                 .orElseThrow(WalletNotFoundException::new);
 
-        // Kiểm tra trước khi cộng để tránh vượt giới hạn.
         if (amount > MAX_BALANCE - wallet.balance()) {
             throw new WalletOperationException(
                     "BALANCE_LIMIT_EXCEEDED",
@@ -55,5 +48,43 @@ public class WalletService {
                 newBalance,
                 wallet.currency()
         );
+    }
+
+    @Transactional
+    public MoneyResponse withdraw(UUID userId, long amount) {
+        validateAmount(amount);
+
+        // Khóa ví trước khi kiểm tra và cập nhật số dư.
+        Wallet wallet = walletRepository.findByUserIdForUpdate(userId)
+                .orElseThrow(WalletNotFoundException::new);
+
+        if (amount > wallet.balance()) {
+            throw new WalletOperationException(
+                    "INSUFFICIENT_BALANCE",
+                    "Số dư không đủ."
+            );
+        }
+
+        long newBalance = wallet.balance() - amount;
+        UUID transactionId = UUID.randomUUID();
+
+        walletRepository.updateBalance(userId, newBalance);
+
+        return new MoneyResponse(
+                transactionId,
+                "WITHDRAW",
+                amount,
+                newBalance,
+                wallet.currency()
+        );
+    }
+
+    private void validateAmount(long amount) {
+        if (amount < 1 || amount > MAX_AMOUNT) {
+            throw new WalletOperationException(
+                    "VALIDATION_ERROR",
+                    "Amount phải là số nguyên từ 1 đến 1.000.000.000 VND."
+            );
+        }
     }
 }

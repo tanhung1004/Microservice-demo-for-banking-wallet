@@ -195,16 +195,16 @@ Controller, DTO, Service, Repository và tests trong Wallet.
 
 Công việc:
 
-- [ ] Tạo POST /api/wallet/withdraw.
-- [ ] Kiểm tra amount hợp lệ.
-- [ ] Kiểm tra đủ tiền và cập nhật trong cùng transaction.
-- [ ] Trả số dư mới hoặc lỗi rõ ràng.
+- [x] Tạo POST /api/wallet/withdraw.
+- [x] Kiểm tra amount hợp lệ.
+- [x] Kiểm tra đủ tiền và cập nhật trong cùng transaction.
+- [x] Trả số dư mới hoặc lỗi rõ ràng.
 
 Kiểm tra:
 
-- Đủ tiền: trừ đúng amount.
-- Không đủ tiền: 409, giữ nguyên số dư.
-- Hai yêu cầu trừ đồng thời không gây chi vượt số dư.
+- [x] Đủ tiền: trừ đúng amount.
+- [x] Không đủ tiền: 409, giữ nguyên số dư.
+- [x] Hai yêu cầu trừ đồng thời không gây chi vượt số dư.
 
 Commit:
 feat(wallet): implement withdrawals with balance protection

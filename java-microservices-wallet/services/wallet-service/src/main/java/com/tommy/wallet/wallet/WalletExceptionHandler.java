@@ -33,10 +33,10 @@ public class WalletExceptionHandler {
             WalletOperationException exception
     ) {
         int status = switch (exception.getCode()) {
-            case "VALIDATION_ERROR" -> 400;
-            case "BALANCE_LIMIT_EXCEEDED" -> 409;
-            default -> 500;
-        };
+    case "VALIDATION_ERROR" -> 400;
+    case "BALANCE_LIMIT_EXCEEDED", "INSUFFICIENT_BALANCE" -> 409;
+    default -> 500;
+    };
 
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(
