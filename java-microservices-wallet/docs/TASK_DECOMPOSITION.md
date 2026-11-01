@@ -221,17 +221,23 @@ event/ và messaging/ trong Wallet Service.
 
 Công việc:
 
-- [ ] Tạo MoneyDepositedEvent theo CONTRACTS.md.
-- [ ] Tạo producer gửi vào topic wallet-deposited.
-- [ ] Chỉ phát event sau khi transaction DB commit thành công.
-- [ ] Ghi nhận lỗi publish để có thể kiểm tra.
-- [ ] Ghi rõ giới hạn giữa DB commit và Kafka publish.
+- [x] Tạo MoneyDepositedEvent theo CONTRACTS.md.
+- [x] Tạo producer gửi vào topic wallet-deposited.
+- [x] Chỉ phát event sau khi transaction DB commit thành công.
+- [x] Ghi nhận lỗi publish để có thể kiểm tra.
+- [x] Ghi rõ giới hạn giữa DB commit và Kafka publish.
 
-Kiểm tra:
+Giới hạn:
+- DB commit và Kafka publish là hai thao tác riêng.
+- Publish lỗi không hoàn tác số dư đã commit; có log kèm eventId và transactionId.
+- Chưa có outbox để lưu và gửi lại event thất bại.
+- Không bảo đảm không mất event hoặc exactly-once toàn luồng.
 
-- Deposit thành công: Kafka nhận event đúng thông tin.
-- Deposit bị từ chối/rollback: không phát event thành công.
-- Không tuyên bố chống mất hoặc trùng event tuyệt đối.
+Kết quả kiểm tra:
+- Deposit thành công: Kafka nhận event khớp transactionId của API.
+- Amount không hợp lệ: bị từ chối, không phát event mới.
+- Kafka dừng: đã ghi nhận lỗi publish AFTER DB COMMIT.
+- Chưa kiểm thử ép rollback sau khi đăng ký event.
 
 Commit:
 feat(events): publish deposit events after commit

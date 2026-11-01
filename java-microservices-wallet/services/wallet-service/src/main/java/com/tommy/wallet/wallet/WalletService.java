@@ -1,7 +1,11 @@
 package com.tommy.wallet.wallet;
 
+import java.time.Instant;
 import java.util.UUID;
 
+import com.tommy.wallet.event.MoneyDepositedEvent;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +16,14 @@ public class WalletService {
     private static final long MAX_BALANCE = 1_000_000_000_000L;
 
     private final WalletRepository walletRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public WalletService(WalletRepository walletRepository) {
+    public WalletService(
+            WalletRepository walletRepository,
+            ApplicationEventPublisher eventPublisher
+    ) {
         this.walletRepository = walletRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public Wallet getBalance(UUID userId) {
@@ -41,6 +50,22 @@ public class WalletService {
 
         walletRepository.updateBalance(userId, newBalance);
 
+        MoneyDepositedEvent event = new MoneyDepositedEvent(
+                UUID.randomUUID(),
+                "MoneyDeposited",
+                1,
+                transactionId,
+                userId,
+                amount,
+                newBalance,
+                wallet.currency(),
+                Instant.now().toString()
+        );
+
+        // Đăng ký event trong ứng dụng.
+        // Listener chỉ gửi Kafka sau khi transaction DB commit.
+        eventPublisher.publishEvent(event);
+
         return new MoneyResponse(
                 transactionId,
                 "DEPOSIT",
@@ -54,7 +79,6 @@ public class WalletService {
     public MoneyResponse withdraw(UUID userId, long amount) {
         validateAmount(amount);
 
-        // Khóa ví trước khi kiểm tra và cập nhật số dư.
         Wallet wallet = walletRepository.findByUserIdForUpdate(userId)
                 .orElseThrow(WalletNotFoundException::new);
 
