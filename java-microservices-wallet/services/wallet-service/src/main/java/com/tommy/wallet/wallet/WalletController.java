@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,11 +25,23 @@ public class WalletController {
     public ResponseEntity<Wallet> getBalance(
             @AuthenticationPrincipal Jwt jwt
     ) {
-        // Chỉ lấy danh tính từ JWT đã được xác thực.
         UUID userId = UUID.fromString(jwt.getSubject());
 
         return ResponseEntity.ok()
                 .header("Cache-Control", "no-store")
                 .body(walletService.getBalance(userId));
+    }
+
+    @PostMapping("/deposit")
+    public ResponseEntity<MoneyResponse> deposit(
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestBody MoneyRequest request
+    ) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        long amount = request.validatedAmount();
+
+        return ResponseEntity.ok()
+                .header("Cache-Control", "no-store")
+                .body(walletService.deposit(userId, amount));
     }
 }

@@ -168,17 +168,17 @@ Controller, DTO, Service, Repository và tests trong Wallet.
 
 Công việc:
 
-- [ ] Tạo POST /api/wallet/deposit.
-- [ ] Kiểm tra amount theo CONTRACTS.md.
-- [ ] Cập nhật số dư trong transaction an toàn.
-- [ ] Trả mã giao dịch và số dư mới.
-- [ ] Chưa phát Kafka event trong task này.
+- [x] Tạo POST /api/wallet/deposit.
+- [x] Kiểm tra amount theo CONTRACTS.md.
+- [x] Cập nhật số dư trong transaction an toàn.
+- [x] Trả mã giao dịch và số dư mới.
+- [x] Chưa phát Kafka event trong task này.
 
 Kiểm tra:
 
-- Cộng 100000: số dư tăng đúng 100000.
-- Amount không hợp lệ: trả lỗi, không đổi số dư.
-- Hai yêu cầu cộng đồng thời không làm mất cập nhật.
+- [x] Cộng 100000: số dư tăng đúng 100000.
+- [x] Amount không hợp lệ: trả lỗi, không đổi số dư.
+- [x] Hai yêu cầu cộng đồng thời không làm mất cập nhật.
 
 Commit:
 feat(wallet): implement validated deposits

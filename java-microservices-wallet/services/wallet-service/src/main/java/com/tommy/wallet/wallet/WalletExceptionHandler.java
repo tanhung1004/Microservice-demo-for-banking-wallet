@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -27,11 +28,39 @@ public class WalletExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(WalletOperationException.class)
+    public ResponseEntity<ErrorResponse> handleOperation(
+            WalletOperationException exception
+    ) {
+        int status = switch (exception.getCode()) {
+            case "VALIDATION_ERROR" -> 400;
+            case "BALANCE_LIMIT_EXCEEDED" -> 409;
+            default -> 500;
+        };
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(
+                        exception.getCode(),
+                        exception.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidBody(
+            HttpMessageNotReadableException exception
+    ) {
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponse(
+                        "VALIDATION_ERROR",
+                        "Body phải là JSON hợp lệ với trường amount là số nguyên."
+                ));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpected(
             Exception exception
     ) {
-        // Không ghi token hoặc thông tin request vào log.
+        // Không ghi token hoặc nội dung request vào log.
         log.error("Wallet request failed with exception type: {}",
                 exception.getClass().getName());
 
