@@ -1,184 +1,426 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* ===== Khung trang ===== */
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-}
-
-.hero {
+.app-shell {
   position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: calc(100dvh - 2 * var(--page-gap));
 
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
-}
-
-#center {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
 
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  padding: 6rem 3vw 3rem;
+  border: 1px solid #ffffff16;
+  background-color: #141312;
 }
 
-#next-steps {
+.brand {
+  position: absolute;
+  top: 1.6rem;
+  left: 3vw;
+  margin: 0;
+
+  color: var(--text);
+  font-size: 1.35rem;
+  font-weight: 750;
+  letter-spacing: -0.04em;
+}
+
+.brand::after {
+  content: " / DEMO";
+  margin-left: 0.6rem;
+  color: var(--accent);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+}
+
+/* ===== Nền đăng nhập ===== */
+
+.login-screen {
+  background:
+    radial-gradient(
+      ellipse at 15% 15%,
+      #9b70432b,
+      transparent 55%
+    ),
+    #141312;
+}
+
+/* Khung ngoài rộng theo màn hình, không chặn ở 1200px */
+.login-frame {
+  width: 94%;
+  min-width: 0;
+  min-height: 72dvh;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: stretch;
+
+  overflow: hidden;
+  border: 1px solid #e8c49b66;
+  border-radius: 1.7rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      #10100ee6 0%,
+      #10100e88 48%,
+      #10100ebf 100%
+    ),
+    url("https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=2400&q=85")
+      center / cover no-repeat;
+
+  box-shadow: 0 1.5rem 4rem #00000055;
+}
+
+/* ===== Nội dung bên trái ===== */
+
+.login-intro {
+  min-width: 0;
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(2rem, 4vw, 5rem);
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.eyebrow {
+  margin: 0 0 1rem;
+  color: #f0c899;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.2em;
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
+.login-intro h2 {
+  margin: 0 0 1.5rem;
+  color: #fffaf3;
+  font-size: clamp(2.5rem, 4.3vw, 5rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  overflow-wrap: anywhere;
+}
+
+.intro-description {
+  max-width: 30ch;
+  margin: 0;
+  color: #eee4d8;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.demo-badge {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.65rem 1rem;
+
+  border: 1px solid #f0d4af80;
+  border-radius: 999px;
+  background: #18130ddd;
+  color: #f0d4af;
+
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* ===== Khu vực form bên phải ===== */
+
+.login-form-area {
+  min-width: 0;
   display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 3vw, 3.5rem);
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
+/* Bỏ giới hạn 480px để form mở rộng theo cột */
+.card {
   width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: clamp(1.5rem, 2.8vw, 3rem);
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+  border: 1px solid #ffffff38;
+  border-radius: 1.4rem;
+  background: #1c1916f5;
+  box-shadow: 0 1rem 3rem #00000040;
+}
+
+.card h1 {
+  margin: 0 0 1rem;
+  color: var(--text);
+  font-size: clamp(1.9rem, 2.6vw, 3rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+
+.description {
+  margin: 0 0 1.8rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.card form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.card label {
+  color: #e5ddd2;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.card input {
+  width: 100%;
+  min-width: 0;
+  min-height: 3.2rem;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.6rem;
+
+  border: 1px solid #8c8276;
+  border-radius: 0.7rem;
+  background: #151413;
+  color: #fff;
+
+  font-size: 1rem;
+  line-height: 1.4;
+  caret-color: var(--accent);
+}
+
+.card input:focus {
+  border-color: var(--accent);
+}
+
+.card input::placeholder {
+  color: #a49a8d;
+}
+
+/* Giữ màu phù hợp khi trình duyệt tự điền tài khoản */
+.card input:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px #24201b inset;
+  caret-color: var(--accent);
+}
+
+.card button {
+  width: 100%;
+  min-height: 3.2rem;
+  padding: 0.9rem 1.4rem;
+
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #faf7f1;
+  color: #171513;
+
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.4;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.card button:hover:not(:disabled) {
+  background: #e8c49b;
+}
+
+.card .secondary {
+  margin-top: 1.6rem;
+  border-color: #a19483;
+  background: transparent;
+  color: #f7f4ef;
+}
+
+.card .secondary:hover:not(:disabled) {
+  border-color: #e8c49b;
+  background: #ffffff0a;
+}
+
+/* ===== Thông báo ===== */
+
+.error,
+.notice {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.7rem;
+
+  font-size: 0.95rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.error {
+  color: #ffc6bd;
+  background: #642f2966;
+  border: 1px solid #b86b5e;
+}
+
+.notice {
+  color: #f0d1aa;
+  background: #d2a16c15;
+  border: 1px solid #9b7954;
+}
+
+.footnote {
+  margin: 1.5rem 0 0;
+  color: #c5beb5;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* ===== Màn hình sau đăng nhập ===== */
+
+.wallet-screen {
+  background:
+    linear-gradient(135deg, #10100ee0, #17130da6),
+    url("https://images.unsplash.com/photo-1579621970795-87facc2f976d?auto=format&fit=crop&w=2400&q=85")
+      center / cover no-repeat;
+}
+
+.wallet-frame {
+  width: 62%;
+  min-width: 0;
+  padding: clamp(1rem, 2vw, 2rem);
+
+  border: 1px solid #f0d4af66;
+  border-radius: 1.7rem;
+  background: #17130d99;
+  box-shadow: 0 1.5rem 4rem #00000055;
+}
+
+.wallet-frame .card {
+  padding: clamp(1.5rem, 3vw, 3.5rem);
+}
+
+.balance-panel {
+  margin-top: 1.8rem;
+  padding: 2rem 1.6rem;
+  border-radius: 1rem;
+
+  color: #241b13;
+  background: linear-gradient(120deg, #f1dec1, #d9aa76);
+}
+
+.balance-panel p {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.balance {
+  display: block;
+  font-size: clamp(2rem, 3.7vw, 4rem);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+
+/* ===== Tablet ===== */
+
+@media (max-width: 1000px) {
+  .app-shell {
+    padding: 5.5rem 1.5rem 2rem;
   }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+  .login-frame {
+    width: 100%;
+    grid-template-columns: 1fr;
+    min-height: auto;
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+
+  .login-intro {
+    padding: 2.5rem 2rem 1rem;
+  }
+
+  .login-intro h2 {
+    font-size: 3rem;
+  }
+
+  .intro-description {
+    max-width: 46ch;
+  }
+
+  .demo-badge {
+    margin-top: 1.3rem;
+  }
+
+  .login-form-area {
+    padding: 1.5rem 2rem 2rem;
+  }
+
+  .wallet-frame {
+    width: 90%;
+  }
+}
+
+/* ===== Điện thoại ===== */
+
+@media (max-width: 600px) {
+  .app-shell {
+    padding: 5rem 0.75rem 1.5rem;
+  }
+
+  .brand {
+    top: 1.5rem;
+    left: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .login-frame,
+  .wallet-frame {
+    width: 100%;
+    border-radius: 1.1rem;
+  }
+
+  .login-intro {
+    padding: 2rem 1.25rem 0.5rem;
+  }
+
+  .login-intro h2 {
+    font-size: 2.4rem;
+  }
+
+  .intro-description {
+    font-size: 1rem;
+  }
+
+  .login-form-area {
+    padding: 1rem 0.75rem 0.75rem;
+  }
+
+  .card,
+  .wallet-frame .card {
+    padding: 1.5rem 1.1rem;
+    border-radius: 0.9rem;
+  }
+
+  .card h1 {
+    font-size: 2rem;
+  }
+
+  .wallet-frame {
+    padding: 0.75rem;
+  }
+
+  .balance-panel {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card button {
+    transition: none;
   }
 }

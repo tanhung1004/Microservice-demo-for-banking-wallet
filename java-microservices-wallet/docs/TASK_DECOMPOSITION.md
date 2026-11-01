@@ -288,11 +288,11 @@ frontend/src/ và frontend/vite.config.js.
 
 Công việc:
 
-- [ ] Tạo form username/password.
-- [ ] Gọi Login API thật.
-- [ ] Hiển thị loading và lỗi.
-- [ ] Giữ token trong memory và chuyển sang trang ví.
-- [ ] Xử lý đăng xuất và token hết hạn.
+- [x] Tạo form username/password.
+- [x] Gọi Login API thật.
+- [x] Hiển thị loading và lỗi.
+- [x] Giữ token trong memory và chuyển sang trang ví.
+- [x] Xử lý đăng xuất và token hết hạn.
 
 Kiểm tra:
 
