@@ -47,6 +47,7 @@ Mục đích:
 Tạo các ứng dụng rỗng để có nền tảng viết code.
 
 Công việc:
+
 - [x] Kiểm tra Java, Node.js, npm, Docker và Git.
 - [x] Tạo Spring Boot project trong services/login-service.
 - [x] Tạo Spring Boot project trong services/wallet-service.
@@ -55,6 +56,7 @@ Công việc:
 - [x] Ghi phiên bản sử dụng và commit Maven Wrapper/lockfile.
 
 Kiểm tra:
+
 - Các project Java build/test được theo cấu hình khởi tạo.
 - Frontend build được.
 - Chưa yêu cầu chức năng đăng nhập hoặc ví hoạt động.
@@ -73,6 +75,7 @@ Vị trí:
 compose.yaml, .env.example, infra/.
 
 Công việc:
+
 - [x] Khai báo PostgreSQL và Kafka trong Compose.
 - [x] Tạo login_db và wallet_db với quyền truy cập riêng.
 - [x] Cấu hình volume để giữ dữ liệu.
@@ -81,6 +84,7 @@ Công việc:
 - [x] Ghi lệnh khởi chạy và kiểm tra vào tài liệu.
 
 Kiểm tra:
+
 - PostgreSQL và Kafka chạy thành công.
 - Kết nối được từng database bằng đúng tài khoản.
 - Gửi và nhận được message thử qua Kafka.
@@ -99,6 +103,7 @@ Vị trí:
 services/login-service/.
 
 Công việc:
+
 - [x] Kết nối PostgreSQL và tạo bảng users bằng Flyway.
 - [x] Tạo User entity, repository và tài khoản demo.
 - [x] Lưu mật khẩu dưới dạng hash.
@@ -113,6 +118,7 @@ Công việc:
 - [x] Unit test JWT: chữ ký và claims hợp lệ; từ chối public key sai.
 
 Kiểm tra:
+
 - Đúng tài khoản: 200 và token.
 - Sai thông tin đăng nhập: 401.
 - Thiếu trường bắt buộc: 400.
@@ -132,13 +138,15 @@ Vị trí:
 services/wallet-service/.
 
 Công việc:
+
 - [ ] Tạo Wallet entity, repository và ví demo.
-- [ ] Cấu hình xác thực token.
-- [ ] Lấy userId từ token đã xác thực.
+- [x] Cấu hình xác thực token.
+- [x] Lấy userId từ token đã xác thực.
 - [ ] Tạo GET /api/wallet/balance.
 - [ ] Không reset số dư khi khởi động lại.
 
 Kiểm tra:
+
 - Token hợp lệ: trả số dư đúng người dùng.
 - Token thiếu, sai hoặc hết hạn: 401.
 - Người dùng không xem được ví của người khác.
@@ -157,6 +165,7 @@ Vị trí:
 Controller, DTO, Service, Repository và tests trong Wallet.
 
 Công việc:
+
 - [ ] Tạo POST /api/wallet/deposit.
 - [ ] Kiểm tra amount theo CONTRACTS.md.
 - [ ] Cập nhật số dư trong transaction an toàn.
@@ -164,6 +173,7 @@ Công việc:
 - [ ] Chưa phát Kafka event trong task này.
 
 Kiểm tra:
+
 - Cộng 100000: số dư tăng đúng 100000.
 - Amount không hợp lệ: trả lỗi, không đổi số dư.
 - Hai yêu cầu cộng đồng thời không làm mất cập nhật.
@@ -182,12 +192,14 @@ Vị trí:
 Controller, DTO, Service, Repository và tests trong Wallet.
 
 Công việc:
+
 - [ ] Tạo POST /api/wallet/withdraw.
 - [ ] Kiểm tra amount hợp lệ.
 - [ ] Kiểm tra đủ tiền và cập nhật trong cùng transaction.
 - [ ] Trả số dư mới hoặc lỗi rõ ràng.
 
 Kiểm tra:
+
 - Đủ tiền: trừ đúng amount.
 - Không đủ tiền: 409, giữ nguyên số dư.
 - Hai yêu cầu trừ đồng thời không gây chi vượt số dư.
@@ -206,6 +218,7 @@ Vị trí:
 event/ và messaging/ trong Wallet Service.
 
 Công việc:
+
 - [ ] Tạo MoneyDepositedEvent theo CONTRACTS.md.
 - [ ] Tạo producer gửi vào topic wallet-deposited.
 - [ ] Chỉ phát event sau khi transaction DB commit thành công.
@@ -213,6 +226,7 @@ Công việc:
 - [ ] Ghi rõ giới hạn giữa DB commit và Kafka publish.
 
 Kiểm tra:
+
 - Deposit thành công: Kafka nhận event đúng thông tin.
 - Deposit bị từ chối/rollback: không phát event thành công.
 - Không tuyên bố chống mất hoặc trùng event tuyệt đối.
@@ -231,6 +245,7 @@ Vị trí:
 services/wallet-subscriber/.
 
 Công việc:
+
 - [ ] Cấu hình Kafka consumer và consumer group.
 - [ ] Lắng nghe topic wallet-deposited.
 - [ ] Đọc event và ghi log thông tin giao dịch.
@@ -238,6 +253,7 @@ Công việc:
 - [ ] Subscriber không cập nhật số dư.
 
 Kiểm tra:
+
 - Cộng tiền ở Wallet: subscriber có log tương ứng.
 - Tạm dừng subscriber rồi chạy lại: nhận phần chưa xử lý.
 - Message lỗi không làm chương trình retry vô hạn.
@@ -256,6 +272,7 @@ Vị trí:
 frontend/src/ và frontend/vite.config.js.
 
 Công việc:
+
 - [ ] Tạo form username/password.
 - [ ] Gọi Login API thật.
 - [ ] Hiển thị loading và lỗi.
@@ -263,6 +280,7 @@ Công việc:
 - [ ] Xử lý đăng xuất và token hết hạn.
 
 Kiểm tra:
+
 - Sai mật khẩu: hiển thị lỗi.
 - Đúng mật khẩu: vào trang ví.
 - Đăng xuất: xóa token và thông tin người dùng.
@@ -282,6 +300,7 @@ Vị trí:
 frontend/src/pages/, services/ và styles.
 
 Công việc:
+
 - [ ] Hiển thị số dư lấy từ API.
 - [ ] Tạo ô nhập tiền và nút cộng/trừ.
 - [ ] Gọi Deposit và Withdraw API thật.
@@ -290,6 +309,7 @@ Công việc:
 - [ ] Không tự gửi lại POST tiền khi chưa rõ kết quả.
 
 Kiểm tra:
+
 - Đăng nhập → xem ví → cộng/trừ hoạt động.
 - Không đủ tiền: hiển thị lỗi, số dư không đổi.
 - Cộng thành công: số dư đổi và subscriber có log.
@@ -308,6 +328,7 @@ Vị trí:
 Dockerfile, .dockerignore, compose.yaml và cấu hình frontend proxy.
 
 Công việc:
+
 - [ ] Viết Dockerfile cho ba chương trình Java.
 - [ ] Đóng gói frontend.
 - [ ] Thêm các ứng dụng vào Compose.
@@ -316,6 +337,7 @@ Công việc:
 - [ ] Giữ dữ liệu qua volume.
 
 Kiểm tra:
+
 - docker compose up --build chạy được toàn bộ.
 - Truy cập giao diện và thực hiện toàn luồng.
 - Khởi động lại không xóa volume: số dư vẫn còn.
@@ -334,6 +356,7 @@ Vị trí:
 README.md, docs/ACCEPTANCE.md, docs/PROGRESS.md, scripts/.
 
 Công việc:
+
 - [ ] Chạy các tình huống trong ACCEPTANCE.md.
 - [ ] Ghi kết quả thực tế và sửa lỗi.
 - [ ] Viết hướng dẫn thiết lập env/key và tài khoản demo.
@@ -342,6 +365,7 @@ Công việc:
 - [ ] Nêu rõ giới hạn của bản demo.
 
 Kiểm tra:
+
 - Người khác làm theo hướng dẫn chạy được.
 - Không thiếu file hoặc bước cấu hình chưa được ghi.
 - Không có bí mật thực trong repository.
