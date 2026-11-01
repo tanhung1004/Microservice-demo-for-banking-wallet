@@ -39,16 +39,20 @@ Giới hạn cần ghi rõ: commit DB và publish Kafka là hai thao tác khác 
 |---|---|---|
 | Login | localhost:8081 | login-service:8080 |
 | Wallet | localhost:8082 | wallet-service:8080 |
+| Login DB | localhost:15433 | login-db:5432 |
+| Wallet DB | localhost:5434 | wallet-db:5432 |
 | Frontend dev | localhost:5173 | không áp dụng |
 | Frontend đóng gói | localhost:8080 | frontend:80 |
-| PostgreSQL | localhost:5432 | postgres:5432 |
-| Kafka | localhost:9092 | kafka:29092 |
+| Kafka | localhost:9092 | kafka:19092 |
 
 Kafka cần cấu hình advertised listeners cho cả client trên host và trong container. Trong container, localhost là chính container, không phải máy host. Browser dùng URL public hoặc đường dẫn cùng origin, không dùng hostname Docker.
 
 Trong dev, Vite proxy `/api/auth` tới Login, `/api/wallet` tới Wallet. Khi đóng gói dùng Nginx proxy hai prefix tương tự và giữ nguyên đường dẫn API. Browser luôn gọi `/api/...`.
 
-Chọn một PostgreSQL container local với hai DB và hai role; mỗi role chỉ có quyền trong DB của service mình. Credentials admin chỉ dùng khởi tạo. Đặt volume cho PostgreSQL và Kafka. Không chạy `docker compose down -v` trong bài test giữ dữ liệu.
+Dùng hai PostgreSQL container riêng: login-db và wallet-db.
+Mỗi service chỉ kết nối database của mình bằng tài khoản riêng.
+Đặt volume riêng cho Login DB, Wallet DB và Kafka.
+Không chạy `docker compose down -v` trong bài test giữ dữ liệu.
 
 ## 6. Phạm vi bảo đảm
 
