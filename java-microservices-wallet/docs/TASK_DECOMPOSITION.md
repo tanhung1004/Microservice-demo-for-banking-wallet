@@ -340,17 +340,16 @@ Mục đích:
 Chạy cả ứng dụng bằng Compose mà không cần mở từng backend trong IDE.
 
 Vị trí:
-Dockerfile, .dockerignore, compose.yaml và cấu hình frontend proxy.
+Dockerfile, .dockerignore, compose.yml, compose.override.yml và frontend/nginx.conf.
 
 Công việc:
 
-- [ ] Viết Dockerfile cho ba chương trình Java.
-- [ ] Đóng gói frontend.
-- [ ] Thêm các ứng dụng vào Compose.
-- [ ] Cấu hình network, ports, environment và key.
-- [ ] Cấu hình frontend gọi đúng API.
-- [ ] Giữ dữ liệu qua volume.
-
+- [x] Viết Dockerfile cho ba chương trình Java.
+- [x] Đóng gói frontend.
+- [x] Thêm các ứng dụng vào Compose.
+- [x] Cấu hình network, ports, environment và key.
+- [x] Cấu hình frontend gọi đúng API.
+- [x] Giữ dữ liệu qua volume.
 Kiểm tra:
 
 - docker compose up --build chạy được toàn bộ.

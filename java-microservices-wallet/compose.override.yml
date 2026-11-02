@@ -1,0 +1,133 @@
+services:
+  # Tạo topic trước khi subscriber khởi động.
+  kafka-topics:
+    image: apache/kafka:3.9.1
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint: ["/opt/kafka/bin/kafka-topics.sh"]
+    command:
+      - "--bootstrap-server"
+      - "kafka:19092"
+      - "--create"
+      - "--if-not-exists"
+      - "--topic"
+      - "wallet-deposited"
+      - "--partitions"
+      - "1"
+      - "--replication-factor"
+      - "1"
+    restart: "no"
+
+  login-service:
+    build:
+      context: ./services/login-service
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SERVER_PORT: "8081"
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=UTC"
+
+      LOGIN_DB_URL: jdbc:postgresql://login-db:5432/login_db
+      LOGIN_DB_USER: login_user
+      LOGIN_DB_PASSWORD: login_dev_password
+
+      JWT_PRIVATE_KEY_PATH: /run/secrets/jwt-private.pem
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt-public.pem
+    volumes:
+      - type: bind
+        source: ./secrets/jwt-private.pem
+        target: /run/secrets/jwt-private.pem
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./secrets/jwt-public.pem
+        target: /run/secrets/jwt-public.pem
+        read_only: true
+        bind:
+          create_host_path: false
+    depends_on:
+      login-db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - --fail
+        - --silent
+        - http://localhost:8081/actuator/health
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+  wallet-service:
+    build:
+      context: ./services/wallet-service
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SERVER_PORT: "8082"
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=UTC"
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://wallet-db:5432/wallet_db
+      SPRING_DATASOURCE_USERNAME: wallet_user
+      SPRING_DATASOURCE_PASSWORD: wallet_dev_password
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt-public.pem
+    volumes:
+      - type: bind
+        source: ./secrets/jwt-public.pem
+        target: /run/secrets/jwt-public.pem
+        read_only: true
+        bind:
+          create_host_path: false
+    depends_on:
+      wallet-db:
+        condition: service_healthy
+      kafka-topics:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - --fail
+        - --silent
+        - http://localhost:8082/actuator/health
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+  wallet-subscriber:
+    build:
+      context: ./services/wallet-subscriber
+    environment:
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=UTC"
+      KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+    depends_on:
+      kafka-topics:
+        condition: service_completed_successfully
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "127.0.0.1:8080:80"
+    depends_on:
+      login-service:
+        condition: service_healthy
+      wallet-service:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -q
+        - -O
+        - /dev/null
+        - http://127.0.0.1/healthz
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
