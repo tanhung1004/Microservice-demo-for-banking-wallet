@@ -316,12 +316,12 @@ frontend/src/pages/, services/ và styles.
 
 Công việc:
 
-- [ ] Hiển thị số dư lấy từ API.
-- [ ] Tạo ô nhập tiền và nút cộng/trừ.
-- [ ] Gọi Deposit và Withdraw API thật.
-- [ ] Cập nhật giao diện theo response backend.
-- [ ] Khóa nút khi đang xử lý và hiển thị lỗi.
-- [ ] Không tự gửi lại POST tiền khi chưa rõ kết quả.
+- [x] Hiển thị số dư lấy từ API.
+- [x] Tạo ô nhập tiền và nút cộng/trừ.
+- [x] Gọi Deposit và Withdraw API thật.
+- [x] Cập nhật giao diện theo response backend.
+- [x] Khóa nút khi đang xử lý và hiển thị lỗi.
+- [x] Không tự gửi lại POST tiền khi chưa rõ kết quả.
 
 Kiểm tra:
 
