@@ -424,3 +424,35 @@
     transition: none;
   }
 }
+
+.money-form {
+  margin: 1.8rem 0;
+}
+
+.amount-help {
+  margin: 0 0 0.8rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.money-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.card .withdraw-button {
+  background: #e8c49b;
+  color: #241b13;
+}
+
+.card .withdraw-button:hover:not(:disabled) {
+  background: #d7ab78;
+}
+
+@media (max-width: 600px) {
+  .money-actions {
+    grid-template-columns: 1fr;
+  }
+}

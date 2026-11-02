@@ -2,7 +2,16 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { apiRequest } from './service/api.js'
 import './App.css'
 
-// Form đăng nhập
+function formatMoney(value) {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+    maximumFractionDigits: 0,
+  }).format(value)
+}
+
+// ==================== ĐĂNG NHẬP ====================
+
 function LoginForm({ onLogin, notice }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -120,11 +129,20 @@ function LoginForm({ onLogin, notice }) {
   )
 }
 
-// Màn hình ví sau khi đăng nhập
+// ==================== MÀN HÌNH VÍ ====================
+
 function WalletPage({ session, onLogout }) {
   const [wallet, setWallet] = useState(null)
+  const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
+  const [busy, setBusy] = useState('')
+  const [uncertain, setUncertain] = useState(false)
+  const [checked, setChecked] = useState(false)
   const [attempt, setAttempt] = useState(0)
+
+  // Chặn hai lần bấm liên tiếp trước khi React cập nhật giao diện.
+  const requestLock = useRef(false)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -144,7 +162,7 @@ function WalletPage({ session, onLogout }) {
 
         if (err.status === 401) {
           onLogout(
-            'Phiên đăng nhập không còn hợp lệ. Vui lòng đăng nhập lại.',
+            'Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.',
           )
           return
         }
@@ -158,15 +176,145 @@ function WalletPage({ session, onLogout }) {
     return () => controller.abort()
   }, [session.accessToken, onLogout, attempt])
 
-  function retry() {
+  function retryInitialLoad() {
     setError('')
-    setWallet(null)
     setAttempt((value) => value + 1)
+  }
+
+  async function refreshBalance() {
+    if (requestLock.current) return
+
+    requestLock.current = true
+    setBusy('refresh')
+    setError('')
+    setMessage('')
+
+    try {
+      const data = await apiRequest('/api/wallet/balance', {
+        token: session.accessToken,
+      })
+
+      setWallet(data)
+      setChecked(true)
+      setMessage('Đã tải số dư mới nhất từ máy chủ.')
+    } catch (err) {
+      if (err.status === 401) {
+        onLogout(
+          'Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.',
+        )
+        return
+      }
+
+      setError(err.message)
+    } finally {
+      requestLock.current = false
+      setBusy('')
+    }
+  }
+
+  async function handleMoney(action) {
+    if (requestLock.current || uncertain || !wallet) return
+
+    setError('')
+    setMessage('')
+
+    const text = amount.trim()
+    const value = Number(text)
+
+    if (
+      !/^[0-9]+$/.test(text) ||
+      !Number.isSafeInteger(value) ||
+      value < 1 ||
+      value > 1_000_000_000
+    ) {
+      setError(
+        'Nhập số nguyên từ 1 đến 1.000.000.000 VND, không dùng dấu phân cách.',
+      )
+      return
+    }
+
+    requestLock.current = true
+    setBusy(action)
+
+    try {
+      // Chỉ gửi POST một lần, không tự gửi lại khi gặp lỗi.
+      const data = await apiRequest(`/api/wallet/${action}`, {
+        method: 'POST',
+        token: session.accessToken,
+        body: { amount: value },
+      })
+
+      const expectedType =
+        action === 'deposit' ? 'DEPOSIT' : 'WITHDRAW'
+
+      if (
+        !Number.isSafeInteger(data.balance) ||
+        data.balance < 0 ||
+        data.balance > 1_000_000_000_000 ||
+        data.currency !== 'VND' ||
+        data.type !== expectedType ||
+        data.amount !== value ||
+        typeof data.transactionId !== 'string' ||
+        !data.transactionId
+      ) {
+        throw new Error('Phản hồi giao dịch không hợp lệ.')
+      }
+
+      // Số dư luôn lấy từ response backend.
+      setWallet((current) => ({
+        ...current,
+        balance: data.balance,
+        currency: data.currency,
+      }))
+
+      setAmount('')
+      setMessage(
+        `${action === 'deposit' ? 'Cộng' : 'Trừ'} ` +
+          `${formatMoney(value)} thành công. ` +
+          `Mã giao dịch: ${data.transactionId}`,
+      )
+    } catch (err) {
+      if (err.status === 401) {
+        onLogout(
+          'Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.',
+        )
+        return
+      }
+
+      // Backend từ chối thao tác theo hợp đồng API.
+      if ([400, 404, 409].includes(err.status)) {
+        setError(err.message)
+        return
+      }
+
+      // Không thể kết luận giao dịch thất bại nếu mất phản hồi.
+      setUncertain(true)
+      setChecked(false)
+      setError(
+        'Chưa xác định được kết quả giao dịch. Không gửi lại thao tác vừa rồi. ' +
+          'Hãy kiểm tra số dư trước khi tiếp tục.',
+      )
+    } finally {
+      requestLock.current = false
+      setBusy('')
+    }
+  }
+
+  function acknowledgeCheck() {
+    setUncertain(false)
+    setChecked(false)
+    setAmount('')
+    setError('')
+    setMessage(
+      'Bạn đã kiểm tra số dư. Việc này không xác nhận riêng kết quả ' +
+        'giao dịch trước; tránh gửi lại thao tác đó nếu vẫn chưa rõ.',
+    )
   }
 
   return (
     <section className="card" aria-labelledby="wallet-title">
       <p className="eyebrow">VÍ CỦA BẠN</p>
+
       <h1 id="wallet-title">
         Xin chào, {session.user.username}
       </h1>
@@ -175,34 +323,106 @@ function WalletPage({ session, onLogout }) {
         <p role="status">Đang tải số dư…</p>
       )}
 
+      {wallet && (
+        <>
+          <div className="balance-panel" aria-live="polite">
+            <p>Số dư hiện tại</p>
+            <strong className="balance">
+              {formatMoney(wallet.balance)}
+            </strong>
+          </div>
+
+          <form
+            className="money-form"
+            onSubmit={(event) => event.preventDefault()}
+            aria-busy={Boolean(busy)}
+          >
+            <label htmlFor="amount">Số tiền (VND)</label>
+
+            <input
+              id="amount"
+              name="amount"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              placeholder="Ví dụ: 10000"
+              value={amount}
+              onChange={(event) => setAmount(event.target.value)}
+              disabled={Boolean(busy) || uncertain}
+              aria-describedby="amount-help"
+            />
+
+            <p id="amount-help" className="amount-help">
+              Từ 1 đến 1.000.000.000 đồng mỗi thao tác.
+              Nhập số liền nhau, không dùng dấu chấm hoặc dấu phẩy.
+            </p>
+
+            <div className="money-actions">
+              <button
+                type="button"
+                disabled={Boolean(busy) || uncertain}
+                onClick={() => handleMoney('deposit')}
+              >
+                {busy === 'deposit' ? 'Đang cộng…' : '+ Cộng tiền'}
+              </button>
+
+              <button
+                type="button"
+                className="withdraw-button"
+                disabled={Boolean(busy) || uncertain}
+                onClick={() => handleMoney('withdraw')}
+              >
+                {busy === 'withdraw' ? 'Đang trừ…' : '− Trừ tiền'}
+              </button>
+            </div>
+          </form>
+        </>
+      )}
+
       {error && (
-        <div>
-          <p className="error" role="alert">
-            {error}
-          </p>
-          <button type="button" onClick={retry}>
-            Thử tải lại
-          </button>
-        </div>
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
+
+      {message && (
+        <p className="notice" role="status">
+          {message}
+        </p>
+      )}
+
+      {!wallet && error && (
+        <button type="button" onClick={retryInitialLoad}>
+          Thử tải lại số dư
+        </button>
       )}
 
       {wallet && (
-        <div className="balance-panel">
-          <p>Số dư hiện tại</p>
+        <button
+          className="secondary"
+          type="button"
+          disabled={Boolean(busy)}
+          onClick={refreshBalance}
+        >
+          {busy === 'refresh' ? 'Đang tải…' : 'Kiểm tra số dư'}
+        </button>
+      )}
 
-          <strong className="balance">
-            {new Intl.NumberFormat('vi-VN', {
-              style: 'currency',
-              currency: 'VND',
-              maximumFractionDigits: 0,
-            }).format(wallet.balance)}
-          </strong>
-        </div>
+      {uncertain && checked && (
+        <button
+          className="secondary"
+          type="button"
+          disabled={Boolean(busy)}
+          onClick={acknowledgeCheck}
+        >
+          Tôi đã kiểm tra số dư
+        </button>
       )}
 
       <button
         className="secondary"
         type="button"
+        disabled={Boolean(busy)}
         onClick={() => onLogout('Bạn đã đăng xuất.')}
       >
         Đăng xuất
@@ -211,9 +431,10 @@ function WalletPage({ session, onLogout }) {
   )
 }
 
-// Quản lý phiên và bố cục chung
+// ==================== ỨNG DỤNG CHÍNH ====================
+
 export default function App() {
-  // Token chỉ lưu trong memory; tải lại trang sẽ cần đăng nhập lại.
+  // Token chỉ lưu trong memory; F5 sẽ yêu cầu đăng nhập lại.
   const [session, setSession] = useState(null)
   const [notice, setNotice] = useState('')
 
@@ -234,6 +455,7 @@ export default function App() {
       Math.max(0, session.expiresAt - Date.now()),
     )
 
+    // Kiểm tra lại khi quay về tab hoặc máy vừa thức dậy.
     function checkExpiry() {
       if (Date.now() >= session.expiresAt) {
         expire()
