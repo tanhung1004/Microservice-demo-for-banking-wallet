@@ -104,3 +104,11 @@ Bản hiện tại dùng publish sau DB commit, chưa triển khai transactional
 
 A13 là kiểm tra và công bố giới hạn, không chứng minh delivery bảo đảm.
 Chỉ tuyên bố phục hồi sự kiện sau lỗi khi đã triển khai và kiểm thử cơ chế đó.
+
+## Thực tế
+Đã clone source đã commit sang thư mục mới, tạo khóa JWT mới,
+build và chạy bằng project Compose/volume riêng.
+Đăng nhập thành công; nạp 1000 trả balance 1000;
+subscriber nhận transactionId 94a0ec7b-0f64-4738-81ec-ec855b15403a
+tại partition 0, offset 0.
+Build sử dụng môi trường Docker hiện có, không phải máy hoàn toàn mới.

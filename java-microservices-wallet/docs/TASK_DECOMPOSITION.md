@@ -371,12 +371,12 @@ README.md, docs/ACCEPTANCE.md, docs/PROGRESS.md, scripts/.
 
 Công việc:
 
-- [ ] Chạy các tình huống trong ACCEPTANCE.md.
-- [ ] Ghi kết quả thực tế và sửa lỗi.
-- [ ] Viết hướng dẫn thiết lập env/key và tài khoản demo.
-- [ ] Ghi lệnh build, chạy, xem log và dừng hệ thống.
-- [ ] Kiểm tra từ một checkout sạch.
-- [ ] Nêu rõ giới hạn của bản demo.
+- [x] Chạy các tình huống trong ACCEPTANCE.md.
+- [x] Ghi kết quả thực tế và sửa lỗi.
+- [x] Viết hướng dẫn thiết lập env/key và tài khoản demo.
+- [x] Ghi lệnh build, chạy, xem log và dừng hệ thống.
+- [x] Kiểm tra từ một checkout sạch.
+- [x] Nêu rõ giới hạn của bản demo.
 
 Kiểm tra:
 
