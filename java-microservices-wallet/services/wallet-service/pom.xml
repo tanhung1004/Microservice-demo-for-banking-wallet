@@ -85,6 +85,13 @@
     <artifactId>spring-boot-starter-kafka</artifactId>
 </dependency>
 
+<!-- Database trong bộ nhớ, chỉ dùng khi chạy test -->
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <scope>test</scope>
+</dependency>
+
 	</dependencies>
 
 	<build>
